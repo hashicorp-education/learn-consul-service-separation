@@ -1,0 +1,82 @@
+---
+apiVersion: consul.hashicorp.com/v1alpha1
+kind: ServiceIntentions
+metadata:
+  name: frontend
+  namespace: frontend
+# Allow traffic from nginx to frontend
+spec:
+  destination:
+    name: frontend
+  sources:
+    - name: nginx
+      action: allow
+---
+apiVersion: consul.hashicorp.com/v1alpha1
+kind: ServiceIntentions
+metadata:
+  name: public-api
+  namespace: frontend
+# Allow traffic from nginx to public-api
+spec:
+  destination:
+    name: public-api
+  sources:
+    - name: nginx
+      action: allow
+---
+apiVersion: consul.hashicorp.com/v1alpha1
+kind: ServiceIntentions
+metadata:
+  name: product-api
+  namespace: backend
+# Allow traffic from public-api to product-api
+spec:
+  destination:
+    name: product-api
+  sources:
+    - name: public-api
+      namespace: frontend
+      action: allow
+---
+apiVersion: consul.hashicorp.com/v1alpha1
+kind: ServiceIntentions
+metadata:
+  name: product-api-db
+  namespace: backend
+# Allow traffic from product-api to product-api-db
+spec:
+  destination:
+    name: product-api-db
+  sources:
+    - name: product-api
+      action: allow
+---
+apiVersion: consul.hashicorp.com/v1alpha1
+kind: ServiceIntentions
+metadata:
+  name: payments
+  namespace: backend
+# Allow traffic from public-api to payments
+spec:
+  destination:
+    name: payments
+  sources:
+    - name: public-api
+      namespace: frontend
+      action: allow
+---
+apiVersion: consul.hashicorp.com/v1alpha1
+kind: ServiceIntentions
+metadata:
+  name: api-gateway
+  namespace: frontend
+# Allow traffic from api-gateway and traffic-generator to nginx
+spec:
+  destination:
+    name: nginx
+  sources:
+    - name: api-gateway
+      action: allow
+    - name: traffic-generator
+      action: allow
