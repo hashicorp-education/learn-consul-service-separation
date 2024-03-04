@@ -20,7 +20,21 @@ resource "kubernetes_secret" "consul_bootstrap_token" {
   depends_on = [module.eks.eks_managed_node_groups, 
                 kubernetes_namespace.consul
                ]
+}
 
+resource "kubernetes_secret" "consul_ca_cert" {
+  metadata {
+    name = "server-consul-ca-cert"
+    namespace = "consul"
+  }
+
+  data = {
+    "tls.crt" = hcp_consul_cluster.main.consul_ca_file
+  }
+
+  depends_on = [module.eks.eks_managed_node_groups, 
+                kubernetes_namespace.consul
+               ]
 }
 
 # Install Consul components on EKS

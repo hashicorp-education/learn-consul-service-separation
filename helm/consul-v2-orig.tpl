@@ -17,12 +17,6 @@ global:
   # Enables TLS
   tls:
     enabled: true
-    caCert:
-      secretName: server-consul-ca-cert
-      secretKey: tls.crt
-    #caKey:
-    #  secretName: server-consul-ca-key
-    #  secretKey: tls.key
   # Exposes Prometheus metrics for the Consul service mesh and sidecars.
   adminPartitions:
     enabled: true
@@ -44,13 +38,6 @@ externalServers:
 
 server:
   enabled: false
-
-
-client:
-  enabled: true
-  join: [${consul_hosts}]
-  exposeGossipPorts: true
-
 
 connectInject:
   enabled: true
