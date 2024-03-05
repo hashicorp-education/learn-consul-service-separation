@@ -43,22 +43,6 @@ variable "consul_helm_filename" {
 }
 
 ################################################################################
-# Observability
-################################################################################
-
-variable "prometheus_chart_version" {
-  type        = string
-  description = "The prometheus Helm chart version to use"
-  default     = "23.3.0"
-}
-
-variable "grafana_chart_version" {
-  type        = string
-  description = "The grafana Helm chart version to use"
-  default     = "6.58.9"
-}
-
-################################################################################
 # HCP Consul
 ################################################################################
 

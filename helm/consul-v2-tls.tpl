@@ -23,11 +23,11 @@ global:
     #caKey:
     #  secretName: server-consul-ca-key
     #  secretKey: tls.key
-  # Exposes Prometheus metrics for the Consul service mesh and sidecars.
   adminPartitions:
     enabled: true
     name: "production"
   enableConsulNamespaces: true
+  # Exposes Prometheus metrics for the Consul service mesh and sidecars.
   metrics:
     enabled: true
     # Enables Consul servers and clients metrics.

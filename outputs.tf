@@ -25,17 +25,33 @@ output "consul_url" {
 }
 
 ################################################################################
-# EKS Cluster
+# Prod EKS Cluster
 ################################################################################
 
-output "kubernetes_cluster_endpoint" {
-  value = data.aws_eks_cluster.cluster.endpoint
+output "prod_cluster_endpoint" {
+  value = data.aws_eks_cluster.cluster-prod.endpoint
 }
 
-output "kubernetes_cluster_id" {
-  value = local.name
+output "prod_cluster_name" {
+  value = module.eks-prod.cluster_name
 }
 
-output "cluster_name" {
-  value = module.eks.cluster_name
+################################################################################
+# Dev EKS Cluster
+################################################################################
+
+output "dev_cluster_endpoint" {
+  value = data.aws_eks_cluster.cluster-dev.endpoint
+}
+
+output "dev_cluster_name" {
+  value = module.eks-dev.cluster_name
+}
+
+output "kubectl_setup" {
+  value = <<EOT
+  # run the following to set up two contexts for kubectl - `dev` and `prod`
+  aws eks --region ${var.vpc_region} update-kubeconfig --name ${module.eks-dev.cluster_name} --alias dev
+  aws eks --region ${var.vpc_region} update-kubeconfig --name ${module.eks-prod.cluster_name} --alias prod
+  EOT
 }

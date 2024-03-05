@@ -9,7 +9,7 @@ terraform {
       version = ">= 0.83.0"
     }
     consul = {
-      source = "hashicorp/consul"
+      source  = "hashicorp/consul"
       version = ">= 2.20.0"
     }
     kubernetes = {
@@ -46,22 +46,51 @@ provider "consul" {
 }
 
 provider "helm" {
+  alias = "production"
+
   kubernetes {
-    host                   = data.aws_eks_cluster.cluster.endpoint
-    cluster_ca_certificate = base64decode(data.aws_eks_cluster.cluster.certificate_authority.0.data)
-    token                  = data.aws_eks_cluster_auth.cluster.token
+    host                   = data.aws_eks_cluster.cluster-prod.endpoint
+    cluster_ca_certificate = base64decode(data.aws_eks_cluster.cluster-prod.certificate_authority.0.data)
+    token                  = data.aws_eks_cluster_auth.cluster-prod.token
   }
 }
 
 provider "kubernetes" {
-  host                   = data.aws_eks_cluster.cluster.endpoint
-  cluster_ca_certificate = base64decode(data.aws_eks_cluster.cluster.certificate_authority.0.data)
-  token                  = data.aws_eks_cluster_auth.cluster.token
+  alias                  = "production"
+  host                   = data.aws_eks_cluster.cluster-prod.endpoint
+  cluster_ca_certificate = base64decode(data.aws_eks_cluster.cluster-prod.certificate_authority.0.data)
+  token                  = data.aws_eks_cluster_auth.cluster-prod.token
 }
 
 provider "kubectl" {
-  host                   = data.aws_eks_cluster.cluster.endpoint
-  cluster_ca_certificate = base64decode(data.aws_eks_cluster.cluster.certificate_authority.0.data)
-  token                  = data.aws_eks_cluster_auth.cluster.token
+  alias                  = "production"
+  host                   = data.aws_eks_cluster.cluster-prod.endpoint
+  cluster_ca_certificate = base64decode(data.aws_eks_cluster.cluster-prod.certificate_authority.0.data)
+  token                  = data.aws_eks_cluster_auth.cluster-prod.token
+  load_config_file       = false
+}
+
+provider "helm" {
+  alias = "development"
+
+  kubernetes {
+    host                   = data.aws_eks_cluster.cluster-dev.endpoint
+    cluster_ca_certificate = base64decode(data.aws_eks_cluster.cluster-dev.certificate_authority.0.data)
+    token                  = data.aws_eks_cluster_auth.cluster-dev.token
+  }
+}
+
+provider "kubernetes" {
+  alias                  = "development"
+  host                   = data.aws_eks_cluster.cluster-dev.endpoint
+  cluster_ca_certificate = base64decode(data.aws_eks_cluster.cluster-dev.certificate_authority.0.data)
+  token                  = data.aws_eks_cluster_auth.cluster-dev.token
+}
+
+provider "kubectl" {
+  alias                  = "development"
+  host                   = data.aws_eks_cluster.cluster-dev.endpoint
+  cluster_ca_certificate = base64decode(data.aws_eks_cluster.cluster-dev.certificate_authority.0.data)
+  token                  = data.aws_eks_cluster_auth.cluster-dev.token
   load_config_file       = false
 }

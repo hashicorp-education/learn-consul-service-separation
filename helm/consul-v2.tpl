@@ -17,17 +17,18 @@ global:
   # Enables TLS
   tls:
     enabled: true
+    enableAutoEncrypt: true
     caCert:
-      secretName: server-consul-ca-cert
+      secretName: consul-ca-cert
       secretKey: tls.crt
     #caKey:
     #  secretName: server-consul-ca-key
     #  secretKey: tls.key
-  # Exposes Prometheus metrics for the Consul service mesh and sidecars.
   adminPartitions:
     enabled: true
-    name: "production"
+    name: ${partition}
   enableConsulNamespaces: true
+  # Exposes Prometheus metrics for the Consul service mesh and sidecars.
   metrics:
     enabled: true
     # Enables Consul servers and clients metrics.
